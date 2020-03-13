@@ -4,6 +4,10 @@ import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Cliente extends Thread {
 
@@ -12,9 +16,8 @@ public class Cliente extends Thread {
     //======================================
     private static String RUTA_ARCHIVOS = "./data/mediaCliente/";
     private static final int PUERTO = 8080;
-
-
-
+    private static String RUTA_LOGS = "./data/logsCliente/";
+    private static String RUTA_CANTIDAD_CLIENTES = "./data/logsCliente/ClienteCounter.txt";	
     //======================================
     // COMUNICACION
     //======================================
@@ -27,16 +30,27 @@ public class Cliente extends Thread {
     private Socket socketCliente;
     private DataInputStream lector;
     private DataOutputStream escritor;
+    private String nombreArchivo;
+    private  int idLog;
+    private long tiempoEjecucion;
+    private int tamanioArch;
 
     //======================================
     // CONSTRUCTORES
     //======================================
 
+    /**
+     * 
+     */
     public Cliente() {
         try {
             socketCliente = new Socket("localhost", PUERTO);
             lector = new DataInputStream(socketCliente.getInputStream());
             escritor = new DataOutputStream(socketCliente.getOutputStream());
+            idLog=numeroCliente();
+            nombreArchivo="";
+            tiempoEjecucion=0;
+            tamanioArch=0;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,10 +66,15 @@ public class Cliente extends Thread {
      * @throws NoSuchAlgorithmException
      */
     public void correrProtocoloCliente() throws IOException, NoSuchAlgorithmException {
+    	long Tfin=0;
+    	long Tinicio= System.currentTimeMillis();
         this.establecerConexion();
         boolean recepcionCorrecta = this.recibirArchivoYHash();
         if(recepcionCorrecta){
             this.confirmaRecepcionCorrectaArchivo();
+            Tfin=System.currentTimeMillis();
+            tiempoEjecucion=Tfin-Tinicio;
+            construirLog(true);
         }
         else{
             this.enviarError();
@@ -73,16 +92,17 @@ public class Cliente extends Thread {
         //Leer HASH -----------------------
         String hash = lector.readUTF();
         System.out.println("HASH: " + hash);
-
+      
         //Leer archivo --------------------
         String nombreArch = lector.readUTF(); //Lee el nombre del archivo enviado y la extension
         System.out.println("Nombre Archivo : " + nombreArch);
+        nombreArchivo= nombreArch;
         byte[] bytes = new byte[1024];
         OutputStream out = new FileOutputStream(RUTA_ARCHIVOS + "New_"+nombreArch);
         BufferedOutputStream bos = new BufferedOutputStream(out);
 
         System.out.println("pasa");
-
+        
         int count;
         MessageDigest digest = MessageDigest.getInstance("SHA-1");
         long size = lector.readLong();
@@ -92,6 +112,7 @@ public class Cliente extends Thread {
             bos.write(bytes, 0, count);
             size -= count;
             System.out.println("bytes leidos " + count);
+            tamanioArch+=count;
         }
         //cerrar stream
         bos.close();
@@ -134,14 +155,25 @@ public class Cliente extends Thread {
     }
 
 
+    
     public void confirmaRecepcionCorrectaArchivo() throws IOException {
         escritor.writeUTF("OK");
     }
 
+    /**
+     * Encargado de verificar y notificar si hubo un error
+     * @throws IOException
+     */
     public void enviarError() throws IOException {
         escritor.writeUTF(ERROR);
+        registrarEnLog("ERROR EN ESTABLECER UNA CONEXION CON EL SERVIDOR");
+        
     }
 
+    /**
+     * Cierra todas las conexiones del escritor y lector
+     * @throws IOException
+     */
     public void cerrarConexiones() throws IOException {
         escritor.close();
         lector.close();
@@ -160,5 +192,68 @@ public class Cliente extends Thread {
         }
     }
 
+    /**
+     * Registrar un evento en el Log
+     * @param msg mensaje que se desea registrar 
+     */
+    public void registrarEnLog(String msg)
+    {
+    	File f = new File(RUTA_LOGS+"log"+idLog+".txt");
+        try {
+            FileWriter fwriter = new FileWriter(f,true);
+            fwriter.append(msg);
+            fwriter.close();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Metodo encargado de construir un Log con una estructura dada para guardar y luego registrarlo por medio del metodo registrarEnLog
+     */
+    public void construirLog(boolean b)
+    {
+    	Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        String strDate = dateFormat.format(date);
+        
+        
+
+        String log = "---------------------- PRUEBA" + idLog +" ----------------------\n";
+        log += "Fecha y Hora: " + strDate + "\n";
+        log += "------------------ INFO ARCHIVO ENVIADO --------------------\n";
+        log += "nombre: " + nombreArchivo + "\n";
+        log += "tamanio archivo: " + tamanioArch + " bytes\n";
+        log += "-------------------INFO CLIENTE-------------------------------\n";
+        log += "id Cliente: " + idLog + " \n";
+        log += "IP Cliente: " + socketCliente.getInetAddress() +  " \n";
+        log += "Port Cliente: " + socketCliente.getLocalPort() + " \n";
+        log += "--------------------- CONEXIONES ----------------------\n";
+        log += "Tiempo ejecucion: " + tiempoEjecucion + " milisegundos\n";
+        log += "Integridad de los datos : " + b + "\n";
+        log += "\n";
+
+        registrarEnLog(log);
+    }
+
+    /**
+     * Encargado de obtener el idCliente y admeas incrementarlo en el archivo
+     * @return el id del cliente 
+     * @throws IOException
+     */
+    public int numeroCliente() throws IOException
+    {
+    	 File file = new File(RUTA_CANTIDAD_CLIENTES);
+         BufferedReader br = new BufferedReader(new FileReader(file));
+         String ss = br.readLine();
+         int idLog = Integer.parseInt(ss);
+         idLog++;
+         FileWriter fw = new FileWriter(file);
+         fw.append(String.valueOf(idLog));
+         fw.close();
+         
+         return idLog;
+    }
+    
 }
