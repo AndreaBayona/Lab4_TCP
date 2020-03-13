@@ -1,0 +1,11 @@
+---------------------- PRUEBA1 ----------------------
+Fecha y Hora: 2020-07-12 08:07:26
+------------------ INFO ARCHIVO ENVIADO --------------------
+nombre: video1.mp4
+tamaño: 74590705 bytes
+--------------------- CONEXIONES ----------------------
+
+------------- Cliente 0-------------
+Tiempo de transferencia del archivo video1.mp4: 1407 segundos
+Entrega exitosa: true
+------------------------------------

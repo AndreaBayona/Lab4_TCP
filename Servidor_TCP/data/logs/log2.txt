@@ -1,0 +1,9 @@
+---------------------- PRUEBA2 ----------------------
+Fecha y Hora: 2020-04-12 09:04:13
+------------------ INFO ARCHIVO ENVIADO --------------------
+nombre: video1.mp4
+tamaño: 0 bytes
+--------------------- CONEXIONES ----------------------
+
+ERROR EN LA CONEXION DEL CLIENTE 0
+.\data\media\video1.mp4 (The system cannot find the file specified)
