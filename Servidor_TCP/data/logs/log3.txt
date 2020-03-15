@@ -1,0 +1,65 @@
+---------------------- PRUEBA3 ----------------------
+Fecha y Hora: 2020-22-15 03:22:11
+------------------ INFO ARCHIVO ENVIADO --------------------
+nombre: video1.mp4
+tamaño: 74590705 bytes
+--------------------- CONEXIONES ----------------------
+
+------------- Cliente 1-------------
+Tiempo de transferencia del archivo video1.mp4: 3959 milisegundos
+Entrega exitosa: true
+Paquetes Enviados: 97573
+Paquetes Transmitidos: 72843
+Paquetes Perdidos: 24730
+------------------------------------
+9SERVIDOR: ERROR EN LA CONEXION DEL CLIENTE 9
+Socket closed
+------------- Cliente 2-------------
+Tiempo de transferencia del archivo video1.mp4: 4494 milisegundos
+Entrega exitosa: true
+Paquetes Enviados: 98758
+Paquetes Transmitidos: 72843
+Paquetes Perdidos: 25915
+------------------------------------
+------------- Cliente 5-------------
+Tiempo de transferencia del archivo video1.mp4: 4980 milisegundos
+Entrega exitosa: true
+Paquetes Enviados: 56004
+Paquetes Transmitidos: 72843
+Paquetes Perdidos: -16839
+------------------------------------
+------------- Cliente 3-------------
+Tiempo de transferencia del archivo video1.mp4: 5177 milisegundos
+Entrega exitosa: true
+Paquetes Enviados: 63215
+Paquetes Transmitidos: 72843
+Paquetes Perdidos: -9628
+------------------------------------
+------------- Cliente 6-------------
+Tiempo de transferencia del archivo video1.mp4: 5052 milisegundos
+Entrega exitosa: true
+Paquetes Enviados: -16357159
+Paquetes Transmitidos: 72843
+Paquetes Perdidos: -16430002
+------------------------------------
+------------- Cliente 4-------------
+Tiempo de transferencia del archivo video1.mp4: 5142 milisegundos
+Entrega exitosa: true
+Paquetes Enviados: -16357159
+Paquetes Transmitidos: 72843
+Paquetes Perdidos: -16430002
+------------------------------------
+------------- Cliente 7-------------
+Tiempo de transferencia del archivo video1.mp4: 4991 milisegundos
+Entrega exitosa: true
+Paquetes Enviados: 33615
+Paquetes Transmitidos: 72843
+Paquetes Perdidos: -39228
+------------------------------------
+------------- Cliente 8-------------
+Tiempo de transferencia del archivo video1.mp4: 4800 milisegundos
+Entrega exitosa: true
+Paquetes Enviados: 23280
+Paquetes Transmitidos: 72843
+Paquetes Perdidos: -49563
+------------------------------------

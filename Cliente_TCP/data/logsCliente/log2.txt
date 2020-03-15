@@ -1,0 +1,13 @@
+---------------------- PRUEBA2 ----------------------
+Fecha y Hora: 2020-10-15 03:10:50
+------------------ INFO ARCHIVO ENVIADO --------------------
+nombre: video1.mp4
+tamanio archivo: 74590705 bytes
+-------------------INFO CLIENTE-------------------------------
+id Cliente: 2 
+IP Cliente: localhost/127.0.0.1 
+Port Cliente: 64350 
+--------------------- CONEXIONES ----------------------
+Tiempo ejecucion: 6484 milisegundos
+Integridad de los datos : true
+

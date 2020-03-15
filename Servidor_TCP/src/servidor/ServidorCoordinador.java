@@ -1,6 +1,7 @@
 package servidor;
 
 import java.io.*;
+import java.net.ProtocolException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.DateFormat;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 public class ServidorCoordinador {
@@ -18,32 +21,35 @@ public class ServidorCoordinador {
     //======================================
     private static String RUTA_ARCHIVOS = "./data/media/";
     private static String RUTA_LOGS = "./data/logs/";
-    private static final int PUERTO = 8080;
+    private static final int PUERTO = 9090;
     private static String RUTA_NUMERO_PRUEBAS = "./data/logs/num.txt";
 
     //======================================
     // ATRIBUTOS
     //======================================
-    private ServerSocket socketServidor;
-    private int numeroConexiones;
-    private  String nombreArchivo;
-    private int idLog;
+    private static  ServerSocket socketServidor;
+    private static int numeroConexiones;
+    private  static String nombreArchivo;
+    private static int idLog;
+//    private static ExecutorService pool;
+    static Object dormidos;
 
     public ServidorCoordinador (int numeroConexiones, String nombreArchivo, int idLog){
-//        try {
+
+            dormidos = new Object();
             this.numeroConexiones = numeroConexiones;
             this.nombreArchivo = nombreArchivo;
             this.idLog = idLog;
 
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+//            pool = Executors.newFixedThreadPool(numeroConexiones);
+
+
     }
 
     public void iniciar() throws IOException {
 
         crearLogPrueba();
-        ArrayList<ServidorProtocolo> threadsServ = new ArrayList<ServidorProtocolo>();
+        ArrayList<Socket> sockets = new ArrayList<Socket>();
         try {
             int count = 0;
             socketServidor = new ServerSocket(PUERTO);
@@ -52,22 +58,41 @@ public class ServidorCoordinador {
 
             while(true) {
                 Socket sc = socketServidor.accept();
-                ServidorProtocolo sp = new ServidorProtocolo(sc, idThread);
+                ServidorProtocolo sp = new ServidorProtocolo(sc, idThread, idLog, nombreArchivo);
+ 
                 idThread++;
-                count++;
-                threadsServ.add(sp);
-                if(count >= numeroConexiones) {
-                    count-=numeroConexiones;
-                    for(int i = 0 ; i < numeroConexiones; i++){
-                        ServidorProtocolo temp = threadsServ.remove(i);
-                        temp.setLogID(idLog);
-                        temp.setNombreArchivo(nombreArchivo);
-                        temp.start();
-                    }
-                }
+                sp.start();
+//                count++;
+
+                
+
+//                synchronized (dormidos){
+//                    if(count >= numeroConexiones)
+//                        dormidos.notifyAll();
+//                }
+
+
+//                sockets.add(sc);
+//                System.out.println("Size cola: " + sockets.size());
+//
+//                if(count >= numeroConexiones) {
+//                    count-=numeroConexiones;
+//                    System.out.println("Size count: " + count);
+//                    for(int i = 0 ; i < numeroConexiones; i++){
+//                        Socket temp = sockets.remove(0);
+//
+//
+//                        pool.execute(sp);
+//                    }
+//                }
+                
             }
+            
+            
+            
         } catch (IOException e) {
 
+           
             registrarEnLog("ERROR CERRANDO CONEXIONES...\n");
             registrarEnLog(e.getMessage() + "\n");
             e.printStackTrace();

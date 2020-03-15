@@ -1,9 +1,9 @@
 ---------------------- PRUEBA2 ----------------------
-Fecha y Hora: 2020-04-12 09:04:13
+Fecha y Hora: 2020-20-15 03:20:49
 ------------------ INFO ARCHIVO ENVIADO --------------------
 nombre: video1.mp4
-tamaño: 0 bytes
+tamaño: 74590705 bytes
 --------------------- CONEXIONES ----------------------
 
-ERROR EN LA CONEXION DEL CLIENTE 0
-.\data\media\video1.mp4 (The system cannot find the file specified)
+ERROR CERRANDO CONEXIONES...
+Address already in use: JVM_Bind
